@@ -201,7 +201,7 @@ BASE_RATE = data["is_fraud"].mean()
 with st.sidebar:
     st.markdown("## 🎛️ Filters")
 
-    if st.button("🔄 Reset all filters", use_container_width=True):
+    if st.button("🔄 Reset all filters", width="stretch"):
         for key in list(st.session_state.keys()):
             if key.startswith("f_"):
                 del st.session_state[key]
@@ -413,14 +413,14 @@ with tab_find:
         flagged[TABLE_COLS].to_csv(index=False).encode("utf-8"),
         file_name="fraud_review_queue.csv",
         mime="text/csv",
-        use_container_width=True,
+        width="stretch",
     )
     dl2.download_button(
         "🚨 Download confirmed frauds (CSV)",
         view[view["is_fraud"] == 1][TABLE_COLS].to_csv(index=False).encode("utf-8"),
         file_name="confirmed_frauds.csv",
         mime="text/csv",
-        use_container_width=True,
+        width="stretch",
     )
 
     st.markdown("### 🎯 How well each risk band separates fraud")
@@ -446,7 +446,7 @@ with tab_find:
     fig.update_traces(textposition="outside")
     fig.update_layout(**CHART_LAYOUT, showlegend=False, yaxis_tickformat=".1%",
                       xaxis_title="", yaxis_title="Fraud rate")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 
 # --- 5.2 Overview -----------------------------------------------------------
@@ -462,7 +462,7 @@ with tab_overview:
     )
     fig.update_traces(textinfo="percent+label", textfont_size=14)
     fig.update_layout(**CHART_LAYOUT)
-    a.plotly_chart(fig, use_container_width=True)
+    a.plotly_chart(fig, width="stretch")
 
     by_cat = (
         view.groupby("merchant_category")
@@ -480,7 +480,7 @@ with tab_overview:
     fig.update_traces(textposition="outside")
     fig.update_layout(**CHART_LAYOUT, showlegend=False, yaxis_tickformat=".1%",
                       xaxis_title="", yaxis_title="Fraud rate")
-    b.plotly_chart(fig, use_container_width=True)
+    b.plotly_chart(fig, width="stretch")
 
     by_hour = (
         view.groupby("transaction_hour")
@@ -508,7 +508,7 @@ with tab_overview:
         yaxis2=dict(title="Transactions", overlaying="y", side="right", showgrid=False),
         legend=dict(orientation="h", y=1.08, x=0.55),
     )
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
     c, d = st.columns(2)
     fig = px.histogram(
@@ -520,7 +520,7 @@ with tab_overview:
     fig.update_traces(opacity=0.75)
     fig.update_layout(**CHART_LAYOUT, xaxis_title="Amount ($)", yaxis_title="% of class",
                       legend_title="")
-    c.plotly_chart(fig, use_container_width=True)
+    c.plotly_chart(fig, width="stretch")
 
     by_age = (
         view.groupby("age_band")
@@ -538,7 +538,7 @@ with tab_overview:
     fig.update_traces(textposition="outside")
     fig.update_layout(**CHART_LAYOUT, xaxis_title="", yaxis_title="Frauds",
                       coloraxis_colorbar_tickformat=".1%")
-    d.plotly_chart(fig, use_container_width=True)
+    d.plotly_chart(fig, width="stretch")
 
 
 # --- 5.3 Risk Signals -------------------------------------------------------
@@ -581,7 +581,7 @@ with tab_signals:
         fig.update_layout(**CHART_LAYOUT, xaxis_tickformat=".1%", xaxis_title="Fraud rate",
                           yaxis_title="", height=460,
                           xaxis_range=[0, lift_df["fraud_rate"].max() * 1.35])
-        st.plotly_chart(fig, use_container_width=True)
+        st.plotly_chart(fig, width="stretch")
 
     e, f = st.columns(2)
 
@@ -594,7 +594,7 @@ with tab_signals:
         title="🔥 Fraud rate heatmap — time of day × merchant",
     )
     fig.update_layout(**CHART_LAYOUT, xaxis_title="", yaxis_title="")
-    e.plotly_chart(fig, use_container_width=True)
+    e.plotly_chart(fig, width="stretch")
 
     by_vel = (
         view.groupby("velocity_last_24h")
@@ -613,7 +613,7 @@ with tab_signals:
     fig.update_traces(textposition="outside")
     fig.update_layout(**CHART_LAYOUT, yaxis_tickformat=".1%", xaxis_title="Velocity (last 24h)",
                       yaxis_title="Fraud rate", coloraxis_showscale=False)
-    f.plotly_chart(fig, use_container_width=True)
+    f.plotly_chart(fig, width="stretch")
 
     plot_df = view.sort_values("is_fraud")  # draw frauds on top
     fig = px.scatter(
@@ -625,7 +625,7 @@ with tab_signals:
     )
     fig.update_layout(**CHART_LAYOUT, height=520, xaxis_title="Device trust score",
                       yaxis_title="Amount ($)", legend_title="")
-    st.plotly_chart(fig, use_container_width=True)
+    st.plotly_chart(fig, width="stretch")
 
 
 # --- 5.4 Risk Checker -------------------------------------------------------
@@ -643,7 +643,7 @@ with tab_checker:
         in_age = g3.slider("🎂 Cardholder age", 18, 69, 34)
         in_foreign = g1.checkbox("🌍 Foreign transaction", value=True)
         in_mismatch = g2.checkbox("📍 Location mismatch", value=True)
-        submitted = st.form_submit_button("🔍 Check this transaction", use_container_width=True)
+        submitted = st.form_submit_button("🔍 Check this transaction", width="stretch")
 
     if submitted:
         one = pd.DataFrame([{
@@ -674,7 +674,7 @@ with tab_checker:
             },
         ))
         gauge.update_layout(**CHART_LAYOUT, height=330)
-        v1.plotly_chart(gauge, use_container_width=True)
+        v1.plotly_chart(gauge, width="stretch")
 
         with v2:
             if band == "Critical":
